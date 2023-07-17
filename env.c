@@ -10,7 +10,6 @@ char *_getenv(const char *name)
 {
 	int nameL = strlen(name);
 	int x;
-	char **environ;
 
 	for (x = 0; environ[x] != NULL; x++)
 	{
@@ -32,7 +31,6 @@ void printEnv(void)
 {
 	char **env;
 	size_t len;
-	char **environ;
 
 /* iterates through env vars. */
 	for (env = environ; *env != NULL; env++)
