@@ -61,7 +61,7 @@ char *_getline(char **cmd, FILE *stream)
                 perror("Memory allocation error");
                 exit(EXIT_FAILURE);
             }
-            memcpy(newCmd, *cmd, Lsize);
+            _memcpy(newCmd, *cmd, Lsize);
             free(*cmd);
             *cmd = newCmd;
         }
