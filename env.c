@@ -42,10 +42,59 @@ void printEnv(void)
 }
 
 /**
-* _setenv - we will write the code after this first comment.
+* _setenv - chenges or adds environment variable
+* @name: the env var name
+* @value: the asigned value to the env var
+* @overwrite: used to indicate whether to over write or not
 *
+* Return: 0 for success and -1 on failure
 */
-int _setenv(const char *name, const char *value, int overwrite);
+int _setenv(const char *name, const char *value, int overwrite)
+{
+	int nameL = strlen(name);
+	int valueL = strlen(value);
+	int x;
+	char *newEnt;
+
+	if (name == NULL || value == NULL || strchr(name, '=') != NULL)
+	{
+		return (-1);/* this means an error ocured during input */
+	}
+	for (x = 0; environ[x] != NULL; x++)
+	{
+		/*check if the env var exists */
+		if (_strncmp(environ[x], name, nameL) == 0 && environ[x][nameL] == '=')
+		{
+			if (overwrite)/* if it exists then will overwrite it */
+			{
+				newEnt = malloc(nameL + valueL + 2);
+				if (newEnt == NULL)
+				{
+					return (-1);
+				}
+				strcpy(newEnt, name);
+				_strcat(newEnt, "=");
+				_strcat(newEnt, value);
+				free(environ[x]);
+				environ[x] = newEnt;
+			}
+			return (0);
+		}
+	}
+	/* and if the env var is not found then a new one is created */
+	newEnt = malloc(nameL + valueL + 2);
+	if (newEnt == NULL)
+	{
+		return (-1);
+	}
+	strcpy(newEnt, name);
+	_strcat(newEnt, "=");
+	_strcat(newEnt, value);
+	environ[x] = newEnt;
+	environ[x +1] = NULL;
+
+	return (0);
+}
 
 /**
 * myUnsetEnv - unsets the environment
