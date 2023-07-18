@@ -104,7 +104,7 @@ char *_memcpy(char *dest, char *src, unsigned int n)
  *
  * Return: void
  */
-char *_strcat(char *dest, char *src)
+char *_strcat(char *dest, const char *src)
 {
 	int i;
 	int j;
