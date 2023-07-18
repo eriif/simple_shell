@@ -21,7 +21,6 @@ char *_getenv(const char *name)
 	}
 	return (NULL);
 }
-
 /**
 * printEnv - prints the environment vars.
 *
@@ -40,7 +39,6 @@ void printEnv(void)
 		write(STDOUT_FILENO, "\n", 1);
 	}
 }
-
 /**
 * _setenv - chenges or adds environment variable
 * @name: the env var name
@@ -61,8 +59,7 @@ int _setenv(const char *name, const char *value, int overwrite)
 		return (-1);/* this means an error ocured during input */
 	}
 	for (x = 0; environ[x] != NULL; x++)
-	{
-		/*check if the env var exists */
+	{/*check if the env var exists */
 		if (_strncmp(environ[x], name, nameL) == 0 && environ[x][nameL] == '=')
 		{
 			if (overwrite)/* if it exists then will overwrite it */
@@ -72,7 +69,7 @@ int _setenv(const char *name, const char *value, int overwrite)
 				{
 					return (-1);
 				}
-				strcpy(newEnt, name);
+				_strcat(newEnt, name);
 				_strcat(newEnt, "=");
 				_strcat(newEnt, value);
 				free(environ[x]);
@@ -81,23 +78,20 @@ int _setenv(const char *name, const char *value, int overwrite)
 			return (0);
 		}
 	}
-	/* and if the env var is not found then a new one is created */
 	newEnt = malloc(nameL + valueL + 2);
 	if (newEnt == NULL)
-	{
+	{/* and if the env var is not found then a new one is created */
 		return (-1);
 	}
-	strcpy(newEnt, name);
+	_strcat(newEnt, name);
 	_strcat(newEnt, "=");
 	_strcat(newEnt, value);
 	environ[x] = newEnt;
-	environ[x +1] = NULL;
-
+	environ[x + 1] = NULL;
 	return (0);
 }
-
 /**
-* myUnsetEnv - unsets the environment
+* _unsetenv - unsets the environment
 * @var: environment var
 *
 * Return: usually 0 for success
