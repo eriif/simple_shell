@@ -27,5 +27,5 @@ int _setenv(const char *name, const char *value, int overwrite);
 char *_memcpy(char *dest, char *src, unsigned int n);
 int cmd_execution(char *cmd);
 int main(void);
-
+char *getAbsolutePath(char *command);
 #endif
