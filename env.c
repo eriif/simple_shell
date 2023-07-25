@@ -54,7 +54,7 @@ int _setenv(const char *name, const char *value, int overwrite)
 	int x;
 	char *newEnt;
 
-	if (name == NULL || value == NULL || strchr(name, '=') != NULL)
+	if (name == NULL || value == NULL || _strchr(name, '=') != NULL)
 	{
 		return (-1);/* this means an error ocured during input */
 	}
