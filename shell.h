@@ -34,12 +34,14 @@ char *_memcpy(char *dest, char *src, unsigned int n);
 char *_getenv(const char *name);
 char *_strtok(char *str, const char *delim);
 char *_strcat(char *dest, const char *src);
+char *_strchr(const char *s, char c);
 
 /*  Prototypes that wont return anything */
 void exit_shell(int status);
 void clear_scrn();
 void printEnv(void);
 
+/* Other prototypes */
 size_t _strcspn(const char *str1, const char *str2);
 unsigned int _strspn(char *s, const char *accept);
 
