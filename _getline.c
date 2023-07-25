@@ -11,7 +11,7 @@
 char *_getline(FILE *stream)
 {
 	static char buffer[BUFFER_SIZE];
-	static int index = 0, bytesRead = 0;
+	static int index, bytesRead;
 	char c, *newCmd;
 	int Lsize = 0, currentBuff = BUFFER_SIZE;
 
@@ -21,7 +21,6 @@ char *_getline(FILE *stream)
 		perror("Memory allocation error");
 		exit(EXIT_FAILURE);
 	}
-
 	while (1)
 	{
 		if (index == bytesRead)

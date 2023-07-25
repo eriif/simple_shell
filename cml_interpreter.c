@@ -71,9 +71,7 @@ int main(void)
 				int status = cmd_execution(args);
 				free_cmd(args);
 				if (status < 0)
-				{
 					write(STDERR_FILENO, "Failed to execute.\n", _strlen("Failed to execute.\n"));
-				}
 			}
 		}
 		free(cmd);

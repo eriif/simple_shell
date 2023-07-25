@@ -54,7 +54,7 @@ char *_strchr(const char *s, char c)
 	{
 		if (*s == c)
 		{
-			return ((char*)s);
+			return ((char *)s);
 		}
 		s++;
 	}
@@ -68,6 +68,7 @@ char *_strchr(const char *s, char c)
 void free_cmd(char **cmd)
 {
 	char **ptr = cmd;
+
 	while (*ptr != NULL)
 	{
 		free(*ptr);
