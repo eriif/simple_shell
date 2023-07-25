@@ -4,30 +4,24 @@
 
 /**
  * _getline - read line of text from the user's input and use it in a program
- * @cmd: double pointer
  * @stream: the file to read from
  *
  * Return: -1 on failure or when it's an invalid arg.
  */
-char *_getline(char **cmd, FILE *stream)
+char *_getline(FILE *stream)
 {
 	static char buffer[BUFFER_SIZE];
-	static int index;
-	static int bytesRead;
-	static int currentBuff = BUFFER_SIZE;
-	char c;
-	char *newCmd;
-	int Lsize = 0;
+	static int index = 0, bytesRead = 0;
+	char c, *newCmd;
+	int Lsize = 0, currentBuff = BUFFER_SIZE;
 
-	if (*cmd == NULL)
+	char *cmd = malloc(currentBuff * sizeof(char));
+	if (cmd == NULL)
 	{
-		*cmd = malloc(currentBuff * sizeof(char));
-		if (*cmd == NULL)
-		{
-			perror("Memory allocation error");
-			exit(EXIT_FAILURE);
-		}
+		perror("Memory allocation error");
+		exit(EXIT_FAILURE);
 	}
+
 	while (1)
 	{
 		if (index == bytesRead)
@@ -45,26 +39,25 @@ char *_getline(char **cmd, FILE *stream)
 		c = buffer[index++];
 		if (c == '\n')
 		{
-			(*cmd)[Lsize] = '\0';
+			cmd[Lsize] = '\0';
 			break;
 		}
 		if (Lsize + 1 == currentBuff)
 		{
 			currentBuff *= 2;
-			newCmd = malloc(currentBuff * sizeof(char));
+			newCmd = realloc(cmd, currentBuff * sizeof(char));
 			if (newCmd == NULL)
 			{
+				free(cmd);
 				perror("Memory allocation error");
 				exit(EXIT_FAILURE);
 			}
-			_memcpy(newCmd, *cmd, Lsize);
-			free(*cmd);
-			*cmd = newCmd;
+			cmd = newCmd;
 		}
-		(*cmd)[Lsize] = c;
+		cmd[Lsize] = c;
 		Lsize++;
 	}
-	return (*cmd);
+	return (cmd);
 }
 
 /**
@@ -74,10 +67,11 @@ char *_getline(char **cmd, FILE *stream)
  *
  * Return: what is returned
  */
-char* _strtok(char* str, const char* delim)
+/**char *_strtok(char *str, const char *delim)
 {
 	static char* buffer = NULL;
 	size_t token_start = _strspn(buffer, delim);
+	size_t token_end = _strcspn(buffer + token_start, delim);
 
 	if (str != NULL)
 	{
@@ -87,8 +81,6 @@ char* _strtok(char* str, const char* delim)
 	{
 		return (NULL);
 	}
-	size_t token_end = _strcspn(buffer + token_start, delim);
-	
 	if (buffer[token_start] == '\0')
 	{
 		buffer = buffer + token_start;
@@ -105,3 +97,46 @@ char* _strtok(char* str, const char* delim)
 	}
 	return (buffer - token_end - token_start);
 }
+
+char **tokenize_input(char *cmd)
+{
+	char *token = NULL;
+	char *delim = " \t\r\n\a";
+	int number_tokens = 0;
+	int i, s = 0;
+	char **argv;
+
+	token = _strtok(cmd, delim);
+	while (token != NULL)
+	{
+		number_tokens++;
+		token = _strtok(NULL, delim);
+	}
+
+	argv = malloc(sizeof(char *) * (number_tokens + 1));
+	if (argv == NULL)
+	{
+		return (NULL);
+	}
+
+	token = _strtok(cmd, delim);
+	for (i = 0; token != NULL; i++)
+	{
+		s = strlen(token);
+		argv[i] = malloc(sizeof(char) * (s + 1));
+		if (argv[i] == NULL)
+		{
+			for (; i > 0; i--)
+			{
+				free(argv[i - 1]);
+				free(argv);
+				return (NULL);
+			}
+		}
+		strcpy(argv[i], token);
+		token = _strtok(NULL, delim);
+	}
+	argv[i] = NULL;
+
+	return (argv);
+}**/

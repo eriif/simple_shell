@@ -1,48 +1,6 @@
 #include "shell.h"
 
 /**
- * cmd_execution - executs commands specified
- * @cmd: a character pointer of the commands
- *
- * Description: this func executes a command specified user in cmd,
- * The function replaces the current process with new ones specified
- * and arguments.the parent waits for child process to finish
- * but when an error is encountered it exits with 1.
- *
- * Return: -1 when forking fails and the status of chiled process
- */
-int cmd_execution(char *cmd)
-{
-	pid_t pid = fork();
-	int status;
-	char *args[2];
-
-	args[0] = cmd;
-	args[1] = NULL;
-
-	if (pid < 0)
-	{
-		return (-1);
-	}
-	else if (pid == 0)
-	{
-		if (execve(cmd, args, NULL) < 0)
-		{
-			write(2, "./hsh: Failed to execute.\n",
-					strlen("./hsh: Failed to execute.\n"));
-			exit(1);
-		}
-	}
-	else
-	{
-		waitpid(pid, &status, 0);
-
-		return (status);
-	}
-	return (0);
-}
-
-/**
  * main - the entry point
  *
  * Description: The function reads inputs from the user.
@@ -60,20 +18,22 @@ int main(void)
 {
 	char *cmd = NULL;
 	size_t length;
-	bool F = false;
+	int e_Status = 0;
+	bool is_tty = isatty(STDIN_FILENO);
 
-	while (1 && !F)
+	while (1)
 	{
-		if (isatty(STDIN_FILENO) == 0)
-			F = true;
-		if (true != F)
-			write(1, "prompt$ ", strlen("prompt$ "));
-		if (_getline(&cmd, stdin) == NULL)
+		if (is_tty)
+			write(STDOUT_FILENO, "prompt$ ", _strlen("prompt$ "));
+
+		cmd = _getline(stdin);
+		if (cmd == NULL)
 		{
-			write(1, "\n", 1);
+			if (is_tty)
+				write(STDOUT_FILENO, "\n", 1);
 			break;
 		}
-		length = strlen(cmd);
+		length = _strlen(cmd);
 		if (length > 0 && cmd[length - 1] == '\n')
 		{
 			cmd[length - 1] = '\0';
@@ -81,15 +41,42 @@ int main(void)
 		}
 		if (length == 0)
 		{
+			free(cmd);
 			continue;
 		}
-		if (cmd_execution(cmd) < 0)
+		if (_strcmp(cmd, "clear") == 0)
 		{
-			write(2, "Failed to execute.\n",
-					strlen("Failed to execute.\n"));
+			clear_scrn();
 		}
+		else if (_strcmp(cmd, "env") == 0)
+		{
+			printEnv();
+			continue;
+		}
+		else if (_strncmp(cmd, "exit", 4) == 0)
+		{
+			if (_strlen(cmd) > 4)
+			{
+				e_Status = _atoi(cmd + 5);
+			}
+			exit_shell(e_Status);
+			free(cmd);
+			break;
+		}
+		else
+		{
+			char **args = parse_cmd(cmd);
+			if (args)
+			{
+				int status = cmd_execution(args);
+				free_cmd(args);
+				if (status < 0)
+				{
+					write(STDERR_FILENO, "Failed to execute.\n", _strlen("Failed to execute.\n"));
+				}
+			}
+		}
+		free(cmd);
 	}
-
-	free(cmd);
 	return (0);
 }
