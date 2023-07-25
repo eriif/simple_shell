@@ -23,23 +23,25 @@ int _atoi(char *str);
 int _unsetenv(char *var);
 int _setenv(const char *name, const char *value, int overwrite);
 int main(void);
-int exe_with_args(char *cmd);
+/*int exe_with_args(char *cmd);*/
 int _strlen(const char *s);
 int cmd_execution(char **cmd);
 
 /*  Prototypes that will return char  */
-char *_getline(char **cmd, FILE *stream);
+char *_getline(FILE *stream);
 char *_strdup(char *strtodup);
 char *_memcpy(char *dest, char *src, unsigned int n);
 char *_getenv(const char *name);
 char *_strtok(char *str, const char *delim);
 char *_strcat(char *dest, const char *src);
 char *_strchr(const char *s, char c);
+char **parse_cmd(char *cmd);
 
 /*  Prototypes that wont return anything */
 void exit_shell(int status);
 void clear_scrn();
 void printEnv(void);
+void free_cmd(char **cmd);
 
 /* Other prototypes */
 size_t _strcspn(const char *str1, const char *str2);
