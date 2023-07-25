@@ -8,7 +8,7 @@
 */
 char *_getenv(const char *name)
 {
-	int nameL = strlen(name);
+	int nameL = _strlen(name);
 	int x;
 
 	for (x = 0; environ[x] != NULL; x++)
@@ -34,7 +34,7 @@ void printEnv(void)
 /* iterates through env vars. */
 	for (env = environ; *env != NULL; env++)
 	{
-		len = strlen(*env);
+		len = _strlen(*env);
 		write(STDOUT_FILENO, *env, len);
 		write(STDOUT_FILENO, "\n", 1);
 	}
@@ -49,8 +49,8 @@ void printEnv(void)
 */
 int _setenv(const char *name, const char *value, int overwrite)
 {
-	int nameL = strlen(name);
-	int valueL = strlen(value);
+	int nameL = _strlen(name);
+	int valueL = _strlen(value);
 	int x;
 	char *newEnt;
 
