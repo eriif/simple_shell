@@ -30,5 +30,5 @@ char *_memcpy(char *dest, char *src, unsigned int n);
 int cmd_execution(char *cmd);
 char *_strcat(char *dest, const char *src);
 int main(void);
-
+char *getAbsolutePath(char *command);
 #endif
