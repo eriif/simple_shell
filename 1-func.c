@@ -42,7 +42,7 @@ char *_strdup(char *strtodup)
 }
 
 /**
- * _strlen_recursion - returns the length of a string
+ * _strlen - returns the length of a string
  * @s: a pointer to a string
  *
  * Return: length
