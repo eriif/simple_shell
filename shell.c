@@ -1,78 +1,44 @@
 #include "shell.h"
-int main(void)
-{
-char *cmd = NULL;
-size_t length;
-int e_Status = 0;
-bool is_tty = isatty(STDIN_FILENO);
 
-while (1)
+/**
+* main - entry point
+* @ac: arg count
+* @av: arg vector
+*
+* Return: 0 on success, 1 on error
+**/
+int main(int ac, char **av)
 {
-if (is_tty)
-write(STDOUT_FILENO, "prompt$ ",
-		strlen("prompt$ "));
+info_t info[] = { INFO_INIT };
+int fd = 2;
 
-cmd = _getline(stdin);
-if (cmd == NULL)
-{
-if (is_tty)
-write(STDOUT_FILENO, "\n", 1);
-break;
-}
+asm ("mov %1, %0\n\t"
+"add $3, %0"
+: "=r" (fd)
+: "r" (fd));
 
-length = strlen(cmd);
-if (length > 0 && cmd[length - 1] == '\n')
+if (ac == 2)
 {
-cmd[length - 1] = '\0';
-length--;
-}
-if (length == 0)
+fd = open(av[1], O_RDONLY);
+if (fd == -1)
 {
-free(cmd);
-continue;
-}
-
-if (strcmp(cmd, "clear") == 0)
+if (errno == EACCES)
+exit(126);
+if (errno == ENOENT)
 {
-clear_scrn();
+_eputs(av[0]);
+_eputs(": 0: Can't open ");
+_eputs(av[1]);
+_eputchar('\n');
+_eputchar(BUF_FLUSH);
+exit(127);
 }
-else if (strcmp(cmd, "env") == 0)
-{
-char **env = environ;
-while (*env != NULL)
-{
-write(STDOUT_FILENO, *env, strlen(*env));
-write(STDOUT_FILENO, "\n", 1);
-env++;
+return (EXIT_FAILURE);
 }
+info->readfd = fd;
 }
-else if (strncmp(cmd, "exit", 4) == 0)
-{
-if (strlen(cmd) > 4)
-{
-e_Status = atoi(cmd + 5);
-}
-exit_shell(e_Status);
-free(cmd);
-break;
-}
-else
-{
-char **args = parse_cmd(cmd);
-if (args)
-{
-int status = cmd_execution(args);
-free_cmd(args);
-if (status < 0)
-{
-write(STDERR_FILENO, "Failed to execute.\n",
-		strlen("Failed to execute.\n"));
-}
-}
-}
-
-free(cmd);
-}
-
-return (0);
+populate_env_list(info);
+read_history(info);
+hsh(info, av);
+return (EXIT_SUCCESS);
 }
