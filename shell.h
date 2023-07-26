@@ -39,12 +39,13 @@ char **parse_cmd(char *cmd);
 
 /*  Prototypes that wont return anything */
 void exit_shell(int status);
-void clear_scrn();
+void clear_scrn(void);
 void printEnv(void);
 void free_cmd(char **cmd);
 
 /* Other prototypes */
 size_t _strcspn(const char *str1, const char *str2);
 unsigned int _strspn(char *s, const char *accept);
+
 
 #endif
