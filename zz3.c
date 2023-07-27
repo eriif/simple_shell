@@ -20,7 +20,7 @@ int cmd_execution(char **cmd)
 	if (pid < 0)
 	{
 		perror("fork error");
-		return (-1);
+		return -1;
 	}
 	else if (pid == 0)
 	{
@@ -33,14 +33,14 @@ int cmd_execution(char **cmd)
 	{
 		waitpid(pid, &status, 0);
 	}
-	return (status);
+	return status;
 }
 
 /**
- * parse_cmd - the entry point
+ * parse_cmd - perses commands for external exe
  * @cmd: commands
  *
- * Return: aguments
+ * Return: args
  */
 char **parse_cmd(char *cmd)
 {
@@ -56,7 +56,7 @@ char **parse_cmd(char *cmd)
 			perror("Memory allocation error");
 			exit(EXIT_FAILURE);
 		}
-		args[arg_count] = _strdup(token);
+		args[arg_count] = strdup(token);
 		if (args[arg_count] == NULL)
 		{
 			perror("Memory allocation error");
@@ -72,7 +72,6 @@ char **parse_cmd(char *cmd)
 		perror("Memory allocation error");
 		exit(EXIT_FAILURE);
 	}
-
 	args[arg_count] = NULL;
 
 	return (args);
