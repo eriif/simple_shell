@@ -32,3 +32,64 @@ return ((char*)s);
 
 return (NULL);
 }
+
+/**
+ * _strcpy - copies a string
+ * @dest: the destination
+ * @src: the source
+ *
+ * Return: pointer to destination
+ **/
+char *_strcpy(char *dest, char *src)
+{
+	int i = 0;
+
+	if (dest == src || src == 0)
+		return (dest);
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = 0;
+	return (dest);
+}
+
+/**
+ * _strspn - The entry point
+ * @s: consists entirely of bytes in accept
+ * @accept: the initial segment of s
+ *
+ * Description: the function that gets the length of a prefix substring
+ * Return: usually 0
+ */
+unsigned int _strspn(char *s, const char *accept)
+{
+	unsigned int y = 0;
+	int z = 0;
+	int accept_len = 0;
+
+	while (accept[accept_len])
+	{
+		accept_len++;
+	}
+	while (*s)
+	{
+		z = 0;
+		while (accept['r'])
+		{
+			if (*s == accept[z])
+			{
+				y++;
+				break;
+			}
+			else if (z == accept_len - 1)
+			{
+				return (y);
+			}
+			z++;
+		}
+		s++;
+	}
+	return (y);
+}
