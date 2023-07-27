@@ -20,7 +20,7 @@ int cmd_execution(char **cmd)
 	if (pid < 0)
 	{
 		perror("fork error");
-		return -1;
+		return (-1);
 	}
 	else if (pid == 0)
 	{
@@ -33,7 +33,7 @@ int cmd_execution(char **cmd)
 	{
 		waitpid(pid, &status, 0);
 	}
-	return status;
+	return (status);
 }
 
 /**
