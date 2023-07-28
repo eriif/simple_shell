@@ -39,12 +39,13 @@ char *_strcpy(char *dest, char *src);
 
 /*  Prototypes that wont return anything */
 void exit_shell(int status);
-void clear_scrn();
+void clear_scrn(void);
 void printEnv(void);
 void free_cmd(char **cmd);
 
 /* Other prototypes */
 unsigned int _strspn(char *s, const char *accept);
 size_t _strcspn(const char *str1, const char *str2);
+
 
 #endif
