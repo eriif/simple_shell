@@ -8,12 +8,34 @@ void clear_scrn(void)
 }
 /**
  * exit_shell - exit inbuild
- * @status: the stats
+ * @cmd: the argument passed
+ * 
+ * Return: 0 for success or -2 on failure
  */
-void exit_shell(int status)
+int exit_shell(char *cmd)
 {
-	write(2, "Exiting...\n", strlen("Exiting...\n"));
-	exit(status);
+	int e_Status;
+	const char *error_msg;
+
+	if (cmd && cmd[0])/* If there is an exit argument */
+	{
+		e_Status = atoi(cmd);
+		if (e_Status == 0 && cmd[0] != '0')
+		{/* if conversion fails */
+			error_msg = "exit number provided error: ";
+			write(STDERR_FILENO, error_msg, _strlen(error_msg));
+			write(STDERR_FILENO, cmd, _strlen(cmd));
+			write(2, " :Exiting failed", _strlen(" :Exiting failed"));
+			write(STDERR_FILENO, "\n", 1);
+			return (-2);/* return -2 for an error */
+		}
+		return (e_Status);
+	}
+	else/* if no arg is provided then */
+	{
+		write(2, "Exiting...\n", strlen("Exiting...\n"));
+		return (0);
+	}
 }
 
 /**
