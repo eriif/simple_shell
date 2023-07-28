@@ -6,7 +6,6 @@
 void free_cmd(char **cmd)
 {
 	char **ptr = cmd;
-
 	while (*ptr)
 	{
 		free(*ptr);
@@ -28,7 +27,7 @@ char *_strchr(const char *s, char c)
 {
 do {
 if (*s == c)
-return ((char *)s);
+return ((char*)s);
 } while (*s++ != '\0');
 
 return (NULL);
