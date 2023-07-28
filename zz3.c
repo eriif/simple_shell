@@ -76,3 +76,61 @@ char **parse_cmd(char *cmd)
 
 	return (args);
 }
+
+/**
+ * shell_cd - change the current working directory
+ * @path: the path to change to
+ *
+ * Return: usually 0 for success.
+ */
+int shell_cd(const char *path)
+{
+	char *cwd, buffer[1024];
+	int chdir_ret;
+	const char *pwd, *oldpwd, *dir;
+
+	if (path == NULL)
+	{/* If no argument is provided, change to the HOME directory */
+		dir = _getenv("HOME");
+		if (!dir)
+			chdir_ret = chdir(getenv("PWD") ? _getenv("PWD") : "/");
+		else
+			chdir_ret = chdir(dir);
+	}
+	else if (*path == '-')
+	{/* checks if the argument is "-" then change to the previous directory (OLDPWD) */ 
+		oldpwd = _getenv("OLDPWD");
+		if (!oldpwd)
+		{/* If OLDPWD is not set then it print the current working directory and ret 1 */
+			cwd = getcwd(buffer, sizeof(buffer));
+			if (cwd)
+			{
+				write(STDOUT_FILENO, cwd, _strlen(cwd));
+				write(STDOUT_FILENO, "\n", 1);
+			}
+			return (1);
+		}
+		write(STDOUT_FILENO, oldpwd, _strlen(oldpwd));
+		write(STDOUT_FILENO, "\n", 1);
+		chdir_ret = chdir(oldpwd);
+	}
+	else/* changes to the specified directory */
+		chdir_ret = chdir(path);
+	if (chdir_ret == -1)
+	{/* If changing the directory failed, print an error message */
+		write(STDERR_FILENO, "cd failed, try again ", _strlen("cd failed, try again "));
+		write(STDERR_FILENO, path, _strlen(path));
+		write(STDERR_FILENO, "\n", 1);
+	}
+	else
+	{/* Update the OLDPWD and PWD environment variables */
+		pwd = getcwd(buffer, sizeof(buffer));
+		if (pwd)
+		{
+			setenv("OLDPWD", getenv("PWD"), 1);
+			setenv("PWD", pwd, 1);
+		}
+	}
+	return (0);
+}
+
