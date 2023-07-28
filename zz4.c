@@ -130,7 +130,7 @@ int main(void)
 	char **args, *cmd = NULL;
 	bool F = false;
 	size_t length;
-	int status, e_Status = 0;
+	int status, e_Status;
 
 	while (1 && !F)
 	{
@@ -162,14 +162,29 @@ int main(void)
 			printEnv();
 			continue;
 		}
+		else if (_strcmp(cmd, "cd") == 0)
+		{
+			if (_strlen(cmd) > 3)
+			{
+				status = shell_cd(cmd + 3);
+				if (status != 0)
+					write(2, "cd failed", _strlen("cd failed"));
+			}
+			else
+			{
+				status = shell_cd(NULL);
+				if (status != 0)
+					write(2, "cd failed", _strlen("cd failed"));
+			}
+		}
 		else if (_strncmp(cmd, "exit", 4) == 0)
 		{
-			if (_strlen(cmd) > 4)
+			e_Status = exit_shell(cmd + 5);
+			if (e_Status >= -1)
 			{
-				e_Status = atoi(cmd + 5);
+				free(cmd);
+				exit(e_Status);
 			}
-			exit_shell(e_Status);
-			break;
 		}
 		else
 		{
