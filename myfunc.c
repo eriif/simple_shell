@@ -55,26 +55,33 @@ int _strncmp(const char *str1, const char *str2, size_t n)
  *
  * Return: the conversion
  */
-int _atoi(char *str)
+int _atoi(char *s)
 {
-	int conv = 0, sign = 0, x = 0;
+	int i, sign = 1, fom = 0, nam;
+	unsigned int result = 0;
 
-	if (str[0] == '-')
+	for (i = 0; s[i] != '\0' && fom != 2; i++)
 	{
-		sign = (-1);
-		x++;
-	}
-	for (; str[x] != '\0'; x++)
-	{
-		if (str[x] < '0' || str[x] > '9')
+		if (s[i] == '-')
+			sign *= -1;
+
+		if (s[i] >= '0' && s[i] <= '9')
 		{
-			break;
+			fom = 1;
+			result *= 10;
+			result += (s[i] - '0');
 		}
-		conv = conv * 10 + (str[x] - '0');
+		else if (fom == 1)
+			fom = 2;
 	}
+	if (sign == -1)
+		nam = -result;
+	else
+		nam = result;
 
-	return (sign * conv);
+	return (nam);
 }
+
 /**
  * _memcpy - a function that copies memory area
  * @dest: The memory area to be copied to
