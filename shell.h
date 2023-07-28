@@ -25,6 +25,8 @@ int _setenv(const char *name, const char *value, int overwrite);
 int main(void);
 int _strlen(const char *s);
 int cmd_execution(char **cmd);
+int shell_cd(const char *path);
+int exit_shell(char *cmd);
 
 /*  Prototypes that will return char  */
 char *_getline(char **cmd, FILE *stream);
@@ -38,14 +40,12 @@ char *_strtok(char *str, const char *delim);
 char *_strcpy(char *dest, char *src);
 
 /*  Prototypes that wont return anything */
-void exit_shell(int status);
-void clear_scrn(void);
+void clear_scrn();
 void printEnv(void);
 void free_cmd(char **cmd);
 
 /* Other prototypes */
 unsigned int _strspn(char *s, const char *accept);
 size_t _strcspn(const char *str1, const char *str2);
-
 
 #endif
