@@ -20,7 +20,7 @@ int cmd_execution(char **cmd)
 	if (pid < 0)
 	{
 		perror("fork error");
-		return -1;
+		return (-1);
 	}
 	else if (pid == 0)
 	{
@@ -33,7 +33,7 @@ int cmd_execution(char **cmd)
 	{
 		waitpid(pid, &status, 0);
 	}
-	return status;
+	return (status);
 }
 
 /**
@@ -98,10 +98,10 @@ int shell_cd(const char *path)
 			chdir_ret = chdir(dir);
 	}
 	else if (*path == '-')
-	{/* checks if the argument is "-" then change to the previous directory (OLDPWD) */ 
+	{/* checks if the argument is "-" then change to the OLDPWD */
 		oldpwd = _getenv("OLDPWD");
 		if (!oldpwd)
-		{/* If OLDPWD is not set then it print the current working directory and ret 1 */
+		{/* If OLDPWD is not set then it print PWD and ret 1 */
 			cwd = getcwd(buffer, sizeof(buffer));
 			if (cwd)
 			{
@@ -118,7 +118,8 @@ int shell_cd(const char *path)
 		chdir_ret = chdir(path);
 	if (chdir_ret == -1)
 	{/* If changing the directory failed, print an error message */
-		write(STDERR_FILENO, "cd failed, try again ", _strlen("cd failed, try again "));
+		write(STDERR_FILENO, "cd failed, try again ",
+				_strlen("cd failed, try again "));
 		write(STDERR_FILENO, path, _strlen(path));
 		write(STDERR_FILENO, "\n", 1);
 	}
@@ -133,4 +134,3 @@ int shell_cd(const char *path)
 	}
 	return (0);
 }
-
